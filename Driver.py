@@ -16,12 +16,15 @@ def main():
     y = np.array(data['y']).T
     y  = 1 - y
     
+    ## 1 = normal
+    ## 0 = anomalous
+    
     num_features = X.shape[1]
     num_hidden = 32
     r = 1.0
-    
     epochs = 50
     nu = 0.01
+    
     oc_nn = OC_NN(num_features, num_hidden, r)
     model = oc_nn.trainModel(X, y, epochs, nu)
     y_pred = model.predict(X)
