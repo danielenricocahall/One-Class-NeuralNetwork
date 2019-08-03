@@ -19,6 +19,15 @@ def main():
     ## 1 = normal
     ## 0 = anomalous
     
+    """
+    Mapping derived from http://odds.cs.stonybrook.edu/smtp-kddcup99-dataset/ and http://odds.cs.stonybrook.edu/http-kddcup99-dataset/
+    """
+    feature_index_to_name = {0: "duration",
+                             1: "src_bytes",
+                             2: "dst_bytes"}
+    
+
+    
     num_features = X.shape[1]
     num_hidden = 32
     r = 1.0
@@ -37,7 +46,12 @@ def main():
         colors.append(cmap[label])
         
     
-    plt.scatter(X[:,0], X[:,1], c = colors)
+    ## choose features to use for scatter plot
+    i, j = 0, 1
+
+    plt.scatter(X[:,i], X[:,j], c = colors)
+    plt.xlabel(feature_index_to_name[i])
+    plt.ylabel(feature_index_to_name[j])
     plt.show()
  
     
