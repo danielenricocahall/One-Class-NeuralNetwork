@@ -8,11 +8,10 @@ import h5py
 import numpy as np
 import matplotlib.pyplot as plt
 from OC_NN import OC_NN
-from sklearn.decomposition import PCA
 
 
 def main():
-    data = h5py.File('http.mat', 'r')
+    data = h5py.File('Data/http.mat', 'r')
     X = np.array(data['X'], dtype = np.float32).T
     y = np.array(data['y']).T
     y  = 1 - y
