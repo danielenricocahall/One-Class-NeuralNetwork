@@ -7,8 +7,8 @@ The implementation is based on the approach described here: https://arxiv.org/pd
 
 ### Loss ###
 
-![alt text](https://github.com/danielenricocahall/One-Class-NeuralNetwork/blob/master/loss_http.png)
+![alt text](https://github.com/danielenricocahall/One-Class-NeuralNetwork/blob/master/Figures/loss_http.png)
 
 
 ### Features ###
-![alt_text](https://github.com/danielenricocahall/One-Class-NeuralNetwork/blob/master/feat_http.png)
+![alt_text](https://github.com/danielenricocahall/One-Class-NeuralNetwork/blob/master/Figures/feat_http.png)
