@@ -3,8 +3,6 @@ Created on Mar 21, 2019
 
 @author: daniel
 '''
-
-# import the necessary packages
 import numpy as np
 RANDOM_SEED = 42
 np.random.seed(RANDOM_SEED)
@@ -14,11 +12,9 @@ sess = tf.Session()
 
 from keras import backend as K
 K.set_session(sess)
-
 from keras.models import Sequential
 from keras.layers.core import Activation
 from keras.layers.core import Dense
-# import the necessary packages
 from keras.optimizers import Adam
 import matplotlib.pyplot as plt
 
