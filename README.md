@@ -12,3 +12,11 @@ The implementation is based on the approach described here: https://arxiv.org/pd
 
 ### Features ###
 ![alt_text](https://github.com/danielenricocahall/One-Class-NeuralNetwork/blob/master/Figures/feat_http.png)
+
+Note: red = normal, blue = anomalous
+
+## TODO ##
+
+* Add legend to feature visualization plot
+* Add more datasets
+
