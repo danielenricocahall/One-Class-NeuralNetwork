@@ -50,7 +50,7 @@ class OneClassNeuralNetwork:
 
         return [model, w, V]
 
-    def train_model(self, X, y, epochs, nu):
+    def train_model(self, X, y, epochs, nu, save=True):
         [model, w, V] = self.build_model()
         init_lr = 1e-2
         model.compile(optimizer=Adam(lr=init_lr, decay=init_lr / epochs),
@@ -61,9 +61,12 @@ class OneClassNeuralNetwork:
                            shuffle=True,
                            epochs=epochs)
 
-        with sess.as_default():
-            w = model.layers[0].get_weights()[0]
-            V = model.layers[2].get_weights()[0]
+        if save:
+            import os
+            from datetime import datetime
+            if not os.path.exists('models'):
+                os.mkdir('models')
+            model.save(f"models/ocnn_{datetime.now().strftime('%Y-%m-%d-%H:%M')}.h5")
 
         plt.style.use("ggplot")
         plt.figure()
