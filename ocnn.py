@@ -50,12 +50,23 @@ class OneClassNeuralNetwork:
 
         return [model, w, V]
 
-    def train_model(self, X, y, epochs, nu, save=True):
+    def train_model(self, X, epochs, nu, init_lr=1e-2, save=True):
+        """
+
+        :param X: training data
+        :param epochs: number of epochs to train for
+        :param nu:
+        :param init_lr: initial learning rate
+        :param save: flag indicating if the model should be  (default True)
+        :return: trained model
+        """
         [model, w, V] = self.build_model()
-        init_lr = 1e-2
         model.compile(optimizer=Adam(lr=init_lr, decay=init_lr / epochs),
                       loss=self.custom_ocnn_loss(nu, w, V))
 
+        # despite the fact that we don't have a ground truth `y`, the fit function requires a label argument,
+        # so we just supply a dummy vector of 0s
+        y = np.zeros((X.shape[0], ))
         result = model.fit(X, y,
                            steps_per_epoch=1,
                            shuffle=True,

@@ -9,11 +9,6 @@ from ocnn import OneClassNeuralNetwork
 def main():
     data = h5py.File('Data/http.mat', 'r')
     X = np.array(data['X'], dtype=np.float32).T
-    y = np.array(data['y']).T
-    y = 1 - y
-
-    # 1 = normal
-    # 0 = anomalous
 
     """
     Mapping derived from http://odds.cs.stonybrook.edu/smtp-kddcup99-dataset/ and http://odds.cs.stonybrook.edu/http-kddcup99-dataset/
@@ -29,7 +24,7 @@ def main():
     nu = 0.01
 
     oc_nn = OneClassNeuralNetwork(num_features, num_hidden, r)
-    model = oc_nn.train_model(X, y, epochs, nu)
+    model = oc_nn.train_model(X, epochs, nu)
     y_pred = model.predict(X)
 
     y_pred = [np.rint(y_pred[i, 0]) for i in range(len(y_pred))]
