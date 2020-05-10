@@ -22,8 +22,6 @@ Running `python driver.py` within your new python environment (either through CL
 ### Features ###
 ![alt_text](https://github.com/danielenricocahall/One-Class-NeuralNetwork/blob/master/Figures/feat_http.png)
 
-Note: red = normal, blue = anomalous
-
 # Limitations
 
 * Currently limited to `Tensorflow 1.x` - specifically, `tf.contrib` hasn't been converted to 2.x (https://github.com/tensorflow/models/issues/7767), which is used in the hinge loss function.

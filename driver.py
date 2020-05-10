@@ -34,7 +34,7 @@ def main():
 
     y_pred = [np.rint(y_pred[i, 0]) for i in range(len(y_pred))]
 
-    cmap = ListedColormap(['b', 'r'])
+    cmap = ListedColormap(['r', 'b'])
 
     # choose features to use for scatter plot
     i, j = 0, 1
