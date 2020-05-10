@@ -56,8 +56,9 @@ class OneClassNeuralNetwork:
 
     def train_model(self, X, epochs=50, nu=1e-2, init_lr=1e-2, save=True):
         """
+        builds and trains the model on the supplied input data
 
-        :param X: training data
+        :param X: input training data
         :param epochs: number of epochs to train for (default 50)
         :param nu: parameter between [0, 1] controls trade off between maximizing the distance of the hyperplane from
         the origin and the number of data points permitted to cross the hyper-plane (false positives) (default 1e-2)
