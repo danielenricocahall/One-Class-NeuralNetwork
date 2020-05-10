@@ -58,7 +58,7 @@ class OneClassNeuralNetwork:
         :param nu:
         :param init_lr: initial learning rate
         :param save: flag indicating if the model should be  (default True)
-        :return: trained model
+        :return: trained model and callback history
         """
         [model, w, V] = self.build_model()
         model.compile(optimizer=Adam(lr=init_lr, decay=init_lr / epochs),
@@ -66,7 +66,7 @@ class OneClassNeuralNetwork:
 
         # despite the fact that we don't have a ground truth `y`, the fit function requires a label argument,
         # so we just supply a dummy vector of 0s
-        result = model.fit(X, np.zeros((X.shape[0], )),
+        history = model.fit(X, np.zeros((X.shape[0], )),
                            steps_per_epoch=1,
                            shuffle=True,
                            epochs=epochs)
@@ -78,14 +78,4 @@ class OneClassNeuralNetwork:
                 os.mkdir('models')
             model.save(f"models/ocnn_{datetime.now().strftime('%Y-%m-%d-%H:%M')}.h5")
 
-        plt.style.use("ggplot")
-        plt.figure()
-        N = epochs
-        plt.plot(np.arange(0, N), result.history["loss"], label="train_loss")
-        plt.title("OCNN Training Loss and Accuracy")
-        plt.xlabel("Epoch")
-        plt.ylabel("Loss")
-        plt.legend(loc="upper right")
-        plt.show()
-
-        return model
+        return model, history

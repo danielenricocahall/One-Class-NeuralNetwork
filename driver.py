@@ -24,7 +24,18 @@ def main():
     nu = 0.01
 
     oc_nn = OneClassNeuralNetwork(num_features, num_hidden, r)
-    model = oc_nn.train_model(X, epochs, nu)
+    model, history = oc_nn.train_model(X, epochs, nu)
+
+    plt.style.use("ggplot")
+    plt.figure()
+    N = epochs
+    plt.plot(np.arange(0, N), history.history["loss"], label="train_loss")
+    plt.title("OCNN Training Loss and Accuracy")
+    plt.xlabel("Epoch")
+    plt.ylabel("Loss")
+    plt.legend(loc="upper right")
+    plt.show()
+
     y_pred = model.predict(X)
 
     y_pred = [np.rint(y_pred[i, 0]) for i in range(len(y_pred))]
