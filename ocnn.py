@@ -56,10 +56,10 @@ class OneClassNeuralNetwork:
         model.compile(optimizer=Adam(lr=init_lr, decay=init_lr / epochs),
                       loss=self.custom_ocnn_loss(nu, w, V))
 
-        H = model.fit(X, y,
-                      steps_per_epoch=1,
-                      shuffle=True,
-                      epochs=epochs)
+        result = model.fit(X, y,
+                           steps_per_epoch=1,
+                           shuffle=True,
+                           epochs=epochs)
 
         with sess.as_default():
             w = model.layers[0].get_weights()[0]
@@ -68,9 +68,9 @@ class OneClassNeuralNetwork:
         plt.style.use("ggplot")
         plt.figure()
         N = epochs
-        plt.plot(np.arange(0, N), H.history["loss"], label="train_loss")
-        plt.title("OC_NN Training Loss and Accuracy")
-        plt.xlabel("Epoch #")
+        plt.plot(np.arange(0, N), result.history["loss"], label="train_loss")
+        plt.title("OCNN Training Loss and Accuracy")
+        plt.xlabel("Epoch")
         plt.ylabel("Loss")
         plt.legend(loc="upper right")
         plt.show()

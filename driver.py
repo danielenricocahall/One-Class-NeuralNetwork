@@ -1,6 +1,8 @@
 import h5py
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.colors import ListedColormap
+
 from ocnn import OneClassNeuralNetwork
 
 
@@ -30,19 +32,17 @@ def main():
     model = oc_nn.train_model(X, y, epochs, nu)
     y_pred = model.predict(X)
 
-    colors = []
-    cmap = {0: "b", 1: "r"}
+    y_pred = [np.rint(y_pred[i, 0]) for i in range(len(y_pred))]
 
-    for i in range(len(y_pred)):
-        label = np.rint(y_pred[i, 0])
-        colors.append(cmap[label])
+    cmap = ListedColormap(['b', 'r'])
 
     # choose features to use for scatter plot
     i, j = 0, 1
 
-    plt.scatter(X[:, i], X[:, j], c=colors)
+    scatter = plt.scatter(X[:, i], X[:, j], c=y_pred, cmap=cmap)
     plt.xlabel(feature_index_to_name[i])
     plt.ylabel(feature_index_to_name[j])
+    plt.legend(handles=scatter.legend_elements()[0], labels=['anomalous', 'normal'], loc='upper right')
     plt.show()
 
 
