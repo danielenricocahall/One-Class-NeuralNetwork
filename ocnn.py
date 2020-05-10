@@ -66,8 +66,7 @@ class OneClassNeuralNetwork:
 
         # despite the fact that we don't have a ground truth `y`, the fit function requires a label argument,
         # so we just supply a dummy vector of 0s
-        y = np.zeros((X.shape[0], ))
-        result = model.fit(X, y,
+        result = model.fit(X, np.zeros((X.shape[0], )),
                            steps_per_epoch=1,
                            shuffle=True,
                            epochs=epochs)
