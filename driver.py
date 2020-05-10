@@ -24,7 +24,7 @@ def main():
     nu = 0.01
 
     oc_nn = OneClassNeuralNetwork(num_features, num_hidden, r)
-    model, history = oc_nn.train_model(X, epochs, nu)
+    model, history = oc_nn.train_model(X, epochs=epochs, nu=nu)
 
     plt.style.use("ggplot")
     plt.figure()

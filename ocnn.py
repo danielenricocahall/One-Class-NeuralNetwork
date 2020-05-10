@@ -15,6 +15,12 @@ K.set_session(sess)
 class OneClassNeuralNetwork:
 
     def __init__(self, input_dim, hidden_layer_size, r=1.0):
+        """
+
+        :param input_dim: number of input features
+        :param hidden_layer_size: number of neurons in the hidden layer
+        :param r: bias of hyperplane
+        """
         self.input_dim = input_dim
         self.hidden_size = hidden_layer_size
         self.r = r
@@ -23,7 +29,6 @@ class OneClassNeuralNetwork:
         def custom_hinge(_, y_pred):
             y = self.r
             y_hat = y_pred
-            # r = nuth quantile
             loss = 0.5 * tf.reduce_sum(w ** 2) + 0.5 * tf.reduce_sum(V ** 2) + \
                    (1 / nu) * K.mean(K.maximum(0.0, y - y_hat)) - self.r
             self.r = tf.contrib.distributions.percentile(self.r, q=100 * nu)
@@ -49,13 +54,14 @@ class OneClassNeuralNetwork:
 
         return [model, w, V]
 
-    def train_model(self, X, epochs, nu, init_lr=1e-2, save=True):
+    def train_model(self, X, epochs=50, nu=1e-2, init_lr=1e-2, save=True):
         """
 
         :param X: training data
-        :param epochs: number of epochs to train for
-        :param nu:
-        :param init_lr: initial learning rate
+        :param epochs: number of epochs to train for (default 50)
+        :param nu: parameter between [0, 1] controls trade off between maximizing the distance of the hyperplane from
+        the origin and the number of data points permitted to cross the hyper-plane (false positives) (default 1e-2)
+        :param init_lr: initial learning rate (default 1e-2)
         :param save: flag indicating if the model should be  (default True)
         :return: trained model and callback history
         """
