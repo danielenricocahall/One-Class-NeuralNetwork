@@ -1,4 +1,5 @@
 import numpy as np
+from keras.engine.saving import load_model
 from keras.models import Sequential
 from keras.layers.core import Activation
 from keras.layers.core import Dense
@@ -88,6 +89,20 @@ class OneClassNeuralNetwork:
                 w = model.layers[0].get_weights()[0]
                 V = model.layers[2].get_weights()[0]
             model.save(f"{model_dir}/model.h5")
-            np.savez(f"{model_dir}/layers.npz", w, V)
+            np.savez(f"{model_dir}/layers.npz", w=w, V=V)
 
         return model, history
+
+    def load_model(self, model_dir, nu=1e-2):
+        """
+        loads a pretrained model
+        :param model_dir: directory where model and model weight layers (w and V) are saved
+        :param nu: same as nu described in train_model
+        :return: loaded model
+        """
+        layers = np.load(f'{model_dir}/layers.npz')
+        w = layers['w']
+        V = layers['V']
+        model = load_model(f'{model_dir}/model.h5',
+                           custom_objects={'custom_hinge': self.custom_ocnn_loss(nu, w, V)})
+        return model
