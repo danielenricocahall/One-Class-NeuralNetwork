@@ -82,6 +82,12 @@ class OneClassNeuralNetwork:
             from datetime import datetime
             if not os.path.exists('models'):
                 os.mkdir('models')
-            model.save(f"models/ocnn_{datetime.now().strftime('%Y-%m-%d-%H:%M')}.h5")
+            model_dir = f"models/ocnn_{datetime.now().strftime('%Y-%m-%d-%H:%M')}"
+            os.mkdir(model_dir)
+            with sess.as_default():
+                w = model.layers[0].get_weights()[0]
+                V = model.layers[2].get_weights()[0]
+            model.save(f"{model_dir}/model.h5")
+            np.savez(f"{model_dir}/layers.npz", w, V)
 
         return model, history
