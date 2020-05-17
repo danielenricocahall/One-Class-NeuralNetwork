@@ -96,7 +96,7 @@ class OneClassNeuralNetwork:
     def load_model(self, model_dir):
         """
         loads a pretrained model
-        :param model_dir: directory where model and model weight layers (w and V) are saved
+        :param model_dir: directory where model and model params (w, V, and nu) are saved
         :param nu: same as nu described in train_model
         :return: loaded model
         """
