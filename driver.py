@@ -43,11 +43,12 @@ def main():
     cmap = ListedColormap(['r', 'b'])
 
     # choose features to use for scatter plot
-    i, j = 0, 1
-
-    scatter = plt.scatter(X[:, i], X[:, j], c=y_pred, cmap=cmap)
-    plt.xlabel(feature_index_to_name[i])
-    plt.ylabel(feature_index_to_name[j])
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    scatter = ax.scatter(X[:, 0], X[:, 1], X[:, 2], c=y_pred, cmap=cmap)
+    ax.set_xlabel(feature_index_to_name[0])
+    ax.set_ylabel(feature_index_to_name[1])
+    ax.set_zlabel(feature_index_to_name[2])
     plt.legend(handles=scatter.legend_elements()[0], labels=['anomalous', 'normal'], loc='upper right')
     plt.show()
 
