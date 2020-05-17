@@ -32,7 +32,7 @@ class OneClassNeuralNetwork:
             y_hat = y_pred
             loss = 0.5 * tf.reduce_sum(w ** 2) + 0.5 * tf.reduce_sum(V ** 2) + \
                    (1 / nu) * K.mean(K.maximum(0.0, y - y_hat)) - self.r
-            self.r = tf.contrib.distributions.percentile(self.r, q=100 * nu)
+            self.r = np.percentile(self.r, q=100 * nu)
             return loss
 
         return custom_hinge
@@ -40,7 +40,7 @@ class OneClassNeuralNetwork:
     def build_model(self):
         h_size = self.hidden_size
         model = Sequential()
-        input_hidden = Dense(h_size, input_dim=self.input_dim, kernel_initializer="glorot_normal", name="input_hidden")
+        input_hidden = Dense(h_size, input_dim=self.input_dim, name="input_hidden")
         model.add(input_hidden)
         model.add(Activation("linear"))
 
@@ -89,20 +89,21 @@ class OneClassNeuralNetwork:
                 w = model.layers[0].get_weights()[0]
                 V = model.layers[2].get_weights()[0]
             model.save(f"{model_dir}/model.h5")
-            np.savez(f"{model_dir}/layers.npz", w=w, V=V)
+            np.savez(f"{model_dir}/params.npz", w=w, V=V, nu=nu)
 
         return model, history
 
-    def load_model(self, model_dir, nu=1e-2):
+    def load_model(self, model_dir):
         """
         loads a pretrained model
         :param model_dir: directory where model and model weight layers (w and V) are saved
         :param nu: same as nu described in train_model
         :return: loaded model
         """
-        layers = np.load(f'{model_dir}/layers.npz')
-        w = layers['w']
-        V = layers['V']
+        params = np.load(f'{model_dir}/params.npz')
+        w = params['w']
+        V = params['V']
+        nu = params['nu'].tolist()
         model = load_model(f'{model_dir}/model.h5',
                            custom_objects={'custom_hinge': self.custom_ocnn_loss(nu, w, V)})
         return model
