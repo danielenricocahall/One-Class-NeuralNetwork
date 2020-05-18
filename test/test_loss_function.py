@@ -12,7 +12,12 @@ def tf_session():
 
 
 def test_loss_function(tf_session):
+    # Test case described in the paper
+    # GIVEN we have this data (integers from 1-9) and nu = 1/3 (0.33)
     data = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    nu = 0.33
     y_n = tf.convert_to_tensor([data], dtype=tf.float32)
-    results = {r: tf_session.run(quantile_loss(r, y_n, 0.33)) for r in data}
+    # WHEN we execute the quantile loss function on each value in the data
+    results = {r: tf_session.run(quantile_loss(r, y_n, nu)) for r in data}
+    # THEN the argument which gives us the minimum value should be 3
     assert next(k for k, v in results.items() if v == min(results.values())) == 3
