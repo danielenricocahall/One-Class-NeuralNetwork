@@ -13,7 +13,11 @@ Running `python driver.py` within your new python environment (either through CL
 
 # Testing
 
-Basic unit test for the quantile loss is defined in `test/test_loss_function.py`. Execute `pytest test` to run.
+Basic unit test for the quantile loss is defined in `test/test_loss_function.py`, based on example in the paper:
+
+![alt text](https://github.com/danielenricocahall/One-Class-NeuralNetwork/blob/master/Figures/test_case.png)
+
+Execute `pytest test` to run.
 
 # Results
 
