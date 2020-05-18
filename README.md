@@ -10,6 +10,11 @@ The implementation is based on the approach described here: https://arxiv.org/pd
 # Running
 
 Running `python driver.py` within your new python environment (either through CLI or IDE) should kick off training for 50 epochs and generate some output plots.
+
+# Testing
+
+Basic unit test for the quantile loss is defined in `test/test_loss_function.py`. Execute `pytest test` to run.
+
 # Results
 
 ## HTTP Dataset ##
@@ -26,4 +31,4 @@ Running `python driver.py` within your new python environment (either through CL
 
 * Currently limited to `Tensorflow 1.x` - specifically, `tf.contrib` hasn't been converted to 2.x (https://github.com/tensorflow/models/issues/7767), which is used in the hinge loss function.
 * Make demo script more flexible
-* Add unit testing
+* Add more unit tests
