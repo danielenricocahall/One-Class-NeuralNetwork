@@ -7,6 +7,8 @@ from keras.optimizers import Adam
 import tensorflow as tf
 from keras import backend as K
 
+from loss import quantile_loss
+
 RANDOM_SEED = 42
 np.random.seed(RANDOM_SEED)
 sess = tf.Session()
@@ -28,8 +30,7 @@ class OneClassNeuralNetwork:
 
     def custom_ocnn_loss(self, nu, w, V):
         def custom_hinge(_, y_pred):
-            loss = 0.5 * tf.reduce_sum(w ** 2) + 0.5 * tf.reduce_sum(V ** 2) + \
-                   (1 / nu) * K.mean(K.maximum(0.0, self.r - tf.reduce_max(y_pred, axis=1))) - self.r
+            loss = 0.5 * tf.reduce_sum(w ** 2) + 0.5 * tf.reduce_sum(V ** 2) + quantile_loss(self.r, y_pred, nu)
             self.r = tf.contrib.distributions.percentile(tf.reduce_max(y_pred, axis=1), q=100 * nu)
             return loss
 
