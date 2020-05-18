@@ -1,5 +1,3 @@
-from unittest.mock import patch
-
 import tensorflow as tf
 from pytest import fixture
 
