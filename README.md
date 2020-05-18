@@ -24,6 +24,6 @@ Running `python driver.py` within your new python environment (either through CL
 
 # Limitations
 
-* Currently limited to `Tensorflow 1.x` - minor modifications to move to `2.x`
+* Currently limited to `Tensorflow 1.x` - specifically, `tf.contrib` hasn't been converted to 2.x (https://github.com/tensorflow/models/issues/7767), which is used in the hinge loss function.
 * Make demo script more flexible
 * Add unit testing
