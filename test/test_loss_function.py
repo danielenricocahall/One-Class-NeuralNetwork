@@ -1,7 +1,10 @@
+from unittest.mock import patch
+
 import tensorflow as tf
 from pytest import fixture
 
 from loss import quantile_loss
+from ocnn import OneClassNeuralNetwork
 
 
 @fixture
@@ -21,3 +24,13 @@ def test_loss_function(tf_session):
     results = {r: tf_session.run(quantile_loss(r, y, nu)) for r in data}
     # THEN the argument which gives us the minimum value should be 3
     assert next(k for k, v in results.items() if v == min(results.values())) == 3
+
+
+def test_build_model():
+    ocnn = OneClassNeuralNetwork(3, 5, 1.0)
+    model, w, V = ocnn.build_model()
+    assert len(model.layers) == 4
+    assert w.shape == (3, 5)
+    assert V.shape == (5, 1)
+
+
