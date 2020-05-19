@@ -18,7 +18,7 @@ def main():
                              2: "dst_bytes"}
 
     num_features = X.shape[1]
-    num_hidden = 32
+    num_hidden = 8
     r = 1.0
     epochs = 50
     nu = 0.01

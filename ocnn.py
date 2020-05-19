@@ -66,9 +66,12 @@ class OneClassNeuralNetwork:
         :param save: flag indicating if the model should be  (default True)
         :return: trained model and callback history
         """
+        def r_metric(_, x):
+            return self.r
+        r_metric.__name__ = 'r'
         [model, w, V] = self.build_model()
         model.compile(optimizer=Adam(lr=init_lr, decay=init_lr / epochs),
-                      loss=self.custom_ocnn_loss(nu, w, V))
+                      loss=self.custom_ocnn_loss(nu, w, V), metrics=[r_metric])
 
         # despite the fact that we don't have a ground truth `y`, the fit function requires a label argument,
         # so we just supply a dummy vector of 0s
@@ -82,7 +85,7 @@ class OneClassNeuralNetwork:
             from datetime import datetime
             if not os.path.exists('models'):
                 os.mkdir('models')
-            model_dir = f"models/ocnn_{datetime.now().strftime('%Y-%m-%d-%H:%M')}"
+            model_dir = f"models/ocnn_{datetime.now().strftime('%Y-%m-%d-%H:%M:%s')}"
             os.mkdir(model_dir)
             with sess.as_default():
                 w = model.layers[0].get_weights()[0]
