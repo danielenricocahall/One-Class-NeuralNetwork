@@ -66,12 +66,18 @@ class OneClassNeuralNetwork:
         :param save: flag indicating if the model should be  (default True)
         :return: trained model and callback history
         """
-        def r_metric(_, x):
+
+        def r_metric(*args):
             return self.r
+
         r_metric.__name__ = 'r'
+
+        def quantile_loss_metric(*args):
+            return quantile_loss(self.r, args[1], nu)
+
         [model, w, V] = self.build_model()
         model.compile(optimizer=Adam(lr=init_lr, decay=init_lr / epochs),
-                      loss=self.custom_ocnn_loss(nu, w, V), metrics=[r_metric])
+                      loss=self.custom_ocnn_loss(nu, w, V), metrics=[r_metric, quantile_loss_metric])
 
         # despite the fact that we don't have a ground truth `y`, the fit function requires a label argument,
         # so we just supply a dummy vector of 0s
