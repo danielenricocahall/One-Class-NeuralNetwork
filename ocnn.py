@@ -39,7 +39,7 @@ class OneClassNeuralNetwork:
     def build_model(self):
         h_size = self.hidden_size
         model = Sequential()
-        input_hidden = Dense(h_size, input_dim=self.input_dim, name="input_hidden")
+        input_hidden = Dense(h_size, input_dim=self.input_dim, kernel_initializer="glorot_normal",  name="input_hidden")
         model.add(input_hidden)
         model.add(Activation("linear"))
 
