@@ -30,7 +30,7 @@ class OneClassNeuralNetwork:
 
     def custom_ocnn_loss(self, nu, w, V):
         def custom_hinge(_, y_pred):
-            loss = 0.5 * tf.reduce_sum(w ** 2) + 0.5 * tf.reduce_sum(V ** 2) + quantile_loss(self.r, tf.reduce_max(y_pred, axis=1), nu)
+            loss = 0.5 * tf.reduce_sum(w ** 2) + 0.5 * tf.reduce_sum(V ** 2) + quantile_loss(self.r, y_pred, nu)
             self.r = tf.contrib.distributions.percentile(tf.reduce_max(y_pred, axis=1), q=100 * nu)
             return loss
 
