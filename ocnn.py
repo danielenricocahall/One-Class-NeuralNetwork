@@ -41,7 +41,7 @@ class OneClassNeuralNetwork:
         model = Sequential()
         input_hidden = Dense(h_size, input_dim=self.input_dim, name="input_hidden")
         model.add(input_hidden)
-        model.add(Activation("linear"))
+        model.add(Activation("relu"))
 
         # Define Dense layer from hidden to output
         hidden_ouput = Dense(1, name="hidden_output")
@@ -74,6 +74,8 @@ class OneClassNeuralNetwork:
 
         def quantile_loss_metric(*args):
             return quantile_loss(self.r, args[1], nu)
+
+        quantile_loss_metric.__name__ = 'quantile_loss'
 
         [model, w, V] = self.build_model()
         model.compile(optimizer=Adam(lr=init_lr, decay=init_lr / epochs),

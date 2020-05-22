@@ -18,9 +18,9 @@ def main():
                              2: "dst_bytes"}
 
     num_features = X.shape[1]
-    num_hidden = 8
+    num_hidden = 32
     r = 1.0
-    epochs = 50
+    epochs = 100
     nu = 0.01
 
     oc_nn = OneClassNeuralNetwork(num_features, num_hidden, r)
@@ -28,9 +28,11 @@ def main():
 
     plt.style.use("ggplot")
     plt.figure()
-    N = epochs
-    plt.plot(np.arange(0, N), history.history["loss"], label="train_loss")
-    plt.title("OCNN Training Loss and Accuracy")
+    plt.plot(history.epoch, history.history["loss"], label="train_loss")
+    plt.plot(history.epoch, history.history["quantile_loss"], label="quantile_loss")
+    plt.plot(history.epoch, history.history["r"], label="r")
+
+    plt.title("OCNN Training Loss")
     plt.xlabel("Epoch")
     plt.ylabel("Loss")
     plt.legend(loc="upper right")
