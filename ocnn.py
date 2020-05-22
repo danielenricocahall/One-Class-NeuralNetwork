@@ -41,7 +41,7 @@ class OneClassNeuralNetwork:
         model = Sequential()
         input_hidden = Dense(h_size, input_dim=self.input_dim, name="input_hidden")
         model.add(input_hidden)
-        model.add(Activation("relu"))
+        model.add(Activation("linear"))
 
         # Define Dense layer from hidden to output
         hidden_ouput = Dense(1, name="hidden_output")
