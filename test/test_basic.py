@@ -19,7 +19,7 @@ def test_loss_function(tf_session):
     nu = 0.33
     y = tf.convert_to_tensor([data], dtype=tf.float32)
     # WHEN we execute the quantile loss function on each value in the data
-    results = {r: tf_session.run(quantile_loss(r, y, nu)) for r in data}
+    results = {r: tf_session.run(quantile_loss(r, y, nu) - r) for r in data}
     # THEN the argument which gives us the minimum value should be 3
     assert next(k for k, v in results.items() if v == min(results.values())) == 3
 

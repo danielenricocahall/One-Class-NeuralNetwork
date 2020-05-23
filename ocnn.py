@@ -78,8 +78,9 @@ class OneClassNeuralNetwork:
         quantile_loss_metric.__name__ = 'quantile_loss'
 
         [model, w, V] = self.build_model()
+
         model.compile(optimizer=Adam(lr=init_lr, decay=init_lr / epochs),
-                      loss=self.custom_ocnn_loss(nu, w, V), metrics=[r_metric, quantile_loss_metric])
+                      loss=self.custom_ocnn_loss(nu, w, V), metrics=[r_metric, quantile_loss_metric, outlier_percentage])
 
         # despite the fact that we don't have a ground truth `y`, the fit function requires a label argument,
         # so we just supply a dummy vector of 0s

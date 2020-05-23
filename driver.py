@@ -21,7 +21,7 @@ def main():
     num_hidden = 32
     r = 1.0
     epochs = 100
-    nu = 0.01
+    nu = 0.001
 
     oc_nn = OneClassNeuralNetwork(num_features, num_hidden, r)
     model, history = oc_nn.train_model(X, epochs=epochs, nu=nu)
@@ -40,14 +40,18 @@ def main():
 
     y_pred = model.predict(X)
 
-    y_pred = [np.rint(y_pred[i, 0]) for i in range(len(y_pred))]
+    r = history.history['r'].pop()
+
+    s_n = [y_pred[i, 0] - r >= 0 for i in range(len(y_pred))]
+
+    frac_of_outliers = len([s for s in s_n if s == 0]) / len(s_n)
 
     cmap = ListedColormap(['r', 'b'])
 
     # choose features to use for scatter plot
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
-    scatter = ax.scatter(X[:, 0], X[:, 1], X[:, 2], c=y_pred, cmap=cmap)
+    scatter = ax.scatter(X[:, 0], X[:, 1], X[:, 2], c=s_n, cmap=cmap)
     ax.set_xlabel(feature_index_to_name[0])
     ax.set_ylabel(feature_index_to_name[1])
     ax.set_zlabel(feature_index_to_name[2])
