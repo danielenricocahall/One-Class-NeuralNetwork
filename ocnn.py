@@ -1,18 +1,17 @@
 import numpy as np
-from keras.engine.saving import load_model
-from keras.models import Sequential
-from keras.layers.core import Activation
-from keras.layers.core import Dense
-from keras.optimizers import Adam
+from tensorflow.keras.models import load_model
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Activation, Dense
+from tensorflow.keras.optimizers import Adam
 import tensorflow as tf
-from keras import backend as K
+import tensorflow_probability as tfp
 
 from loss import quantile_loss
+tf.config.experimental_run_functions_eagerly(True)
+
 
 RANDOM_SEED = 42
 np.random.seed(RANDOM_SEED)
-sess = tf.Session()
-K.set_session(sess)
 
 
 class OneClassNeuralNetwork:
@@ -31,7 +30,7 @@ class OneClassNeuralNetwork:
     def custom_ocnn_loss(self, nu, w, V):
         def custom_hinge(_, y_pred):
             loss = 0.5 * tf.reduce_sum(w ** 2) + 0.5 * tf.reduce_sum(V ** 2) + quantile_loss(self.r, y_pred, nu)
-            self.r = tf.contrib.distributions.percentile(tf.reduce_max(y_pred, axis=1), q=100 * nu)
+            self.r = tfp.stats.percentile(tf.reduce_max(y_pred, axis=1), q=100 * nu)
             return loss
 
         return custom_hinge
@@ -48,9 +47,8 @@ class OneClassNeuralNetwork:
         model.add(hidden_ouput)
         model.add(Activation("sigmoid"))
 
-        with sess.as_default():
-            w = input_hidden.get_weights()[0]
-            V = hidden_ouput.get_weights()[0]
+        w = input_hidden.get_weights()[0]
+        V = hidden_ouput.get_weights()[0]
 
         return [model, w, V]
 
@@ -96,9 +94,8 @@ class OneClassNeuralNetwork:
                 os.mkdir('models')
             model_dir = f"models/ocnn_{datetime.now().strftime('%Y-%m-%d-%H:%M:%s')}"
             os.mkdir(model_dir)
-            with sess.as_default():
-                w = model.layers[0].get_weights()[0]
-                V = model.layers[2].get_weights()[0]
+            w = model.layers[0].get_weights()[0]
+            V = model.layers[2].get_weights()[0]
             model.save(f"{model_dir}/model.h5")
             np.savez(f"{model_dir}/params.npz", w=w, V=V, nu=nu)
 

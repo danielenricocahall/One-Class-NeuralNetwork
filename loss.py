@@ -1,4 +1,4 @@
-import keras.backend as K
+import tensorflow as tf
 
 
 def quantile_loss(r, y, nu):
@@ -10,4 +10,4 @@ def quantile_loss(r, y, nu):
         the origin and the number of data points permitted to cross the hyper-plane (false positives) (default 1e-2)
     :return: the loss function value
     """
-    return (1 / nu) * K.mean(K.maximum(0.0, r - y), axis=-1)
+    return (1 / nu) * tf.reduce_mean(tf.maximum(0.0, r - y), axis=-1)

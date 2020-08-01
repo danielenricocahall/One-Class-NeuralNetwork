@@ -6,10 +6,10 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
+tensorflow = "*"
 matplotlib = "*"
-keras = "==2.2.4"
-tensorflow = "==1.15.2"
 pytest = "*"
+tensorflow-probability = "*"
 
 [requires]
 python_version = "3.6"
