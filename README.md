@@ -33,6 +33,5 @@ Execute `pytest test` to run.
 
 # Limitations
 
-* Currently limited to `Tensorflow 1.x` - specifically, `tf.contrib` hasn't been converted to 2.x (https://github.com/tensorflow/models/issues/7767), which is used in the hinge loss function.
 * Make demo script more flexible
 * Add more unit tests
