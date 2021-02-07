@@ -7,7 +7,6 @@ import tensorflow as tf
 import tensorflow_probability as tfp
 
 from loss import quantile_loss
-tf.config.experimental_run_functions_eagerly(True)
 
 
 RANDOM_SEED = 42
