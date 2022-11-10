@@ -18,9 +18,9 @@ def main():
                              2: "dst_bytes"}
 
     num_features = X.shape[1]
-    num_hidden = 32
+    num_hidden = 64
     r = 1.0
-    epochs = 100
+    epochs = 300
     nu = 0.001
 
     oc_nn = OneClassNeuralNetwork(num_features, num_hidden, r)
