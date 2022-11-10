@@ -18,17 +18,18 @@ def main():
                              2: "dst_bytes"}
 
     num_features = X.shape[1]
-    num_hidden = 64
+    num_hidden = 16
     r = 1.0
-    epochs = 300
-    nu = 0.001
+    epochs = 200
+    nu = 0.1
 
     oc_nn = OneClassNeuralNetwork(num_features, num_hidden, r)
     model, history = oc_nn.train_model(X, epochs=epochs, nu=nu)
 
     plt.style.use("ggplot")
     plt.figure()
-    plt.plot(history.epoch, history.history["loss"], label="train_loss")
+    # Note: omit the first train loss as it is very high and skews the plot
+    plt.plot(history.epoch[1:], history.history["loss"][1:], label="train_loss")
     plt.plot(history.epoch, history.history["quantile_loss"], label="quantile_loss")
     plt.plot(history.epoch, history.history["r"], label="r")
 

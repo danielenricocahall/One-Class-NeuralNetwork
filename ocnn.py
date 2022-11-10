@@ -39,17 +39,17 @@ class OneClassNeuralNetwork:
         model = Sequential()
         input_hidden = Dense(h_size, input_dim=self.input_dim, kernel_initializer="glorot_normal",  name="input_hidden")
         model.add(input_hidden)
-        model.add(Activation("linear"))
-
-        # Define Dense layer from hidden to output
-        hidden_ouput = Dense(1, name="hidden_output")
-        model.add(hidden_ouput)
         model.add(Activation("sigmoid"))
 
-        w = input_hidden.get_weights()[0]
-        V = hidden_ouput.get_weights()[0]
+        # Define Dense layer from hidden to output
+        hidden_output = Dense(1, name="hidden_output")
+        model.add(hidden_output)
+        model.add(Activation("linear"))
 
-        return [model, w, V]
+        V = input_hidden.get_weights()[0]  # "V is the weight matrix from input to hidden units"
+        w = hidden_output.get_weights()[0]  # "w is the scalar output obtained from the hidden to output layer"
+
+        return model, V, w
 
     def train_model(self, X, epochs=50, nu=1e-2, init_lr=1e-2, save=True):
         """
@@ -74,9 +74,9 @@ class OneClassNeuralNetwork:
 
         quantile_loss_metric.__name__ = 'quantile_loss'
 
-        model, w, V = self.build_model()
+        model, V, w = self.build_model()
 
-        model.compile(optimizer=Adam(lr=init_lr, decay=init_lr / epochs),
+        model.compile(optimizer=Adam(lr=init_lr),
                       loss=self.custom_ocnn_loss(nu, w, V), metrics=[r_metric, quantile_loss_metric], run_eagerly=True)
 
         # despite the fact that we don't have a ground truth `y`, the fit function requires a label argument,
@@ -93,8 +93,8 @@ class OneClassNeuralNetwork:
                 os.mkdir('models')
             model_dir = f"models/ocnn_{datetime.now().strftime('%Y-%m-%d-%H:%M:%s')}"
             os.mkdir(model_dir)
-            w = model.layers[0].get_weights()[0]
-            V = model.layers[2].get_weights()[0]
+            V = model.layers[0].get_weights()[0]
+            w = model.layers[2].get_weights()[0]
             model.save(f"{model_dir}/model.h5")
             np.savez(f"{model_dir}/params.npz", w=w, V=V, nu=nu)
 
