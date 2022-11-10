@@ -22,7 +22,7 @@ def test_loss_function():
 def test_build_model():
     ocnn = OneClassNeuralNetwork(3, 5, 1.0)
     model, V, w = ocnn.build_model()
-    assert len(model.layers) == 3
+    assert len(model.layers) == 4
     assert V.shape == (3, 5)
     assert w.shape == (5, 1)
 
