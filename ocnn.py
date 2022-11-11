@@ -104,7 +104,6 @@ class OneClassNeuralNetwork:
         """
         loads a pretrained model
         :param model_dir: directory where model and model params (w, V, and nu) are saved
-        :param nu: same as nu described in train_model
         :return: loaded model
         """
         params = np.load(f'{model_dir}/params.npz')
