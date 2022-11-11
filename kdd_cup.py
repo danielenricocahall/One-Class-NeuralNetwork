@@ -7,7 +7,7 @@ from ocnn import OneClassNeuralNetwork
 
 
 def main():
-    data = h5py.File('Data/http.mat', 'r')
+    data = h5py.File('data/http.mat', 'r')
     X = np.array(data['X'], dtype=np.float32).T
 
     """
