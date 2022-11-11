@@ -43,4 +43,4 @@ Execute `pytest test` to run.
 
 
 # Limitations
-Currently, the loss function is unbounded, since increasing `r` will decrease the loss. The result is, the model never really "converges", which can be gleaned from the figures above. As far as I can tell, this was never discussed in the paper. Stability would be something interesting to explore here.
+Unlike in the original paper, which optimizes for `w` and `V` first, then optimizes for `r`, in this implementation, they're jointly optimized, which results in an unbounded loss (as in, it never converges). The model works, but I would like to explore this further to evaluate if we can perform the correct optimization in one step.
