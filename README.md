@@ -15,7 +15,7 @@ Running `python kdd_cup.py` or `python wine.py` within your new python environme
 
 Two unit tests are defined in `test/test_basic.py`: building the model, and the quantile loss test based on example in the paper:
 
-![alt text](https://github.com/danielenricocahall/One-Class-NeuralNetwork/blob/master/Figures/test_case.png)
+![alt text](https://github.com/danielenricocahall/One-Class-NeuralNetwork/blob/master/figures/test_case.png)
 
 Execute `pytest test` to run.
 
