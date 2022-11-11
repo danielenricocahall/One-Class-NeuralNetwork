@@ -9,7 +9,7 @@ The implementation is based on the approach described here: https://arxiv.org/pd
 
 # Running
 
-Running `python driver.py` within your new python environment (either through CLI or IDE) should kick off training for 50 epochs and generate some output plots.
+Running `python kdd_cup.py` or `python wine.py` within your new python environment (either through CLI or IDE) should kick off training on the KDD Cup dataset epochs and generate some output plots.
 
 # Testing
 
