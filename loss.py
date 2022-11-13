@@ -5,7 +5,7 @@ def quantile_loss(r, y_hat, nu):
     """
     3rd term in Eq (4) of the original paper
     :param r: bias of hyperplane
-    :param y: data / output we're operating on
+    :param y_hat: data / output we're operating on
     :param nu: parameter between [0, 1] controls trade off between maximizing the distance of the hyperplane from
         the origin and the number of data points permitted to cross the hyper-plane (false positives) (default 1e-2)
     :return: the loss function value
