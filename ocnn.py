@@ -8,7 +8,6 @@ import tensorflow_probability as tfp
 
 from loss import quantile_loss
 
-
 RANDOM_SEED = 42
 np.random.seed(RANDOM_SEED)
 
@@ -28,10 +27,10 @@ class OneClassNeuralNetwork:
 
     def custom_ocnn_loss(self, nu, w, V):
         def custom_hinge(_, y_pred):
-            loss = 0.5 * tf.reduce_sum(tf.square(w)) + \
-                   0.5 * tf.reduce_sum(tf.square(V)) + \
+            loss = 0.5 * tf.norm(w) + \
+                   0.5 * tf.norm(V) + \
                    quantile_loss(self.r, y_pred, nu)
-            self.r = tfp.stats.percentile(y_pred, q=100 * nu)
+            self.r = tfp.stats.percentile(y_pred, q=100 * nu, interpolation='linear')
             return loss
 
         return custom_hinge
@@ -39,7 +38,7 @@ class OneClassNeuralNetwork:
     def build_model(self):
         h_size = self.hidden_size
         model = Sequential()
-        input_hidden = Dense(h_size, input_dim=self.input_dim, kernel_initializer="glorot_normal",  name="input_hidden")
+        input_hidden = Dense(h_size, input_dim=self.input_dim, kernel_initializer="glorot_normal", name="input_hidden")
         model.add(input_hidden)
         model.add(Activation("sigmoid"))
 
