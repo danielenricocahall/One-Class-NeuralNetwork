@@ -10,4 +10,4 @@ def quantile_loss(r, y_hat, nu):
         the origin and the number of data points permitted to cross the hyper-plane (false positives) (default 1e-2)
     :return: the loss function value
     """
-    return (1 / nu) * tf.reduce_mean(tf.maximum(0.0, r - y_hat), axis=-1) - r
+    return (1 / nu) * tf.reduce_mean(tf.maximum(0.0, r - y_hat)) - r
