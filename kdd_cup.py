@@ -32,6 +32,8 @@ def main():
     plt.plot(history.epoch[1:], history.history["loss"][1:], label="train_loss")
     plt.plot(history.epoch, history.history["quantile_loss"], label="quantile_loss")
     plt.plot(history.epoch, history.history["r"], label="r")
+    plt.plot(history.epoch, history.history["w_norm"], label="w_norm")
+    plt.plot(history.epoch, history.history["V_norm"], label="V_norm")
 
     plt.title("OCNN Training Loss")
     plt.xlabel("Epoch")

@@ -25,10 +25,10 @@ class OneClassNeuralNetwork:
         self.hidden_size = hidden_layer_size
         self.r = r
 
-    def custom_ocnn_loss(self, nu, w, V):
+    def custom_ocnn_loss(self, nu):
         def custom_hinge(_, y_pred):
-            loss = 0.5 * tf.norm(w) + \
-                   0.5 * tf.norm(V) + \
+            loss = 0.5 * tf.norm(self.w) + \
+                   0.5 * tf.norm(self.V) + \
                    quantile_loss(self.r, y_pred, nu)
             self.r = tfp.stats.percentile(y_pred, q=100 * nu, interpolation='linear')
             return loss
@@ -47,10 +47,10 @@ class OneClassNeuralNetwork:
         model.add(hidden_output)
         model.add(Activation("linear"))
 
-        V = input_hidden.get_weights()[0]  # "V is the weight matrix from input to hidden units"
-        w = hidden_output.get_weights()[0]  # "w is the scalar output obtained from the hidden to output layer"
+        self.V = input_hidden.get_weights()[0]  # "V is the weight matrix from input to hidden units"
+        self.w = hidden_output.get_weights()[0]  # "w is the scalar output obtained from the hidden to output layer"
 
-        return model, V, w
+        return model
 
     def train_model(self, X, epochs=50, nu=1e-2, init_lr=1e-2, save=True):
         """
@@ -70,21 +70,37 @@ class OneClassNeuralNetwork:
 
         r_metric.__name__ = 'r'
 
+        def w_norm(*args):
+            return 0.5 * tf.norm(self.w)
+
+        def V_norm(*args):
+            return 0.5 * tf.norm(self.V)
+
+        w_norm.__name__ = 'w_norm'
+
+        V_norm.__name__ = 'V_norm'
+
         def quantile_loss_metric(*args):
             return quantile_loss(self.r, args[1], nu)
 
+        def on_epoch_end(epoch, logs):
+            self.w = model.get_layer('hidden_output').get_weights()[0]
+            self.V = model.get_layer('input_hidden').get_weights()[0]
+
         quantile_loss_metric.__name__ = 'quantile_loss'
 
-        model, V, w = self.build_model()
+        model = self.build_model()
 
         model.compile(optimizer=Adam(lr=init_lr),
-                      loss=self.custom_ocnn_loss(nu, w, V), metrics=[r_metric, quantile_loss_metric], run_eagerly=True)
+                      loss=self.custom_ocnn_loss(nu),
+                      metrics=[r_metric, quantile_loss_metric, w_norm, V_norm], run_eagerly=True)
 
         # despite the fact that we don't have a ground truth `y`, the fit function requires a label argument,
         # so we just supply a dummy vector of 0s
         history = model.fit(X, np.zeros((X.shape[0],)),
                             steps_per_epoch=1,
                             shuffle=True,
+                            callbacks=[tf.keras.callbacks.LambdaCallback(on_epoch_end=on_epoch_end)],
                             epochs=epochs)
 
         if save:
