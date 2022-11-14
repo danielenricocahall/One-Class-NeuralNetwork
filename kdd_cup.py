@@ -24,7 +24,7 @@ def main():
     nu = 0.1
 
     oc_nn = OneClassNeuralNetwork(num_features, num_hidden, r)
-    model, history = oc_nn.train_model(X, epochs=epochs, nu=nu)
+    model, history = oc_nn.train_model(X, epochs=epochs, nu=nu, init_lr=0.001)
 
     plt.style.use("ggplot")
     plt.figure()
@@ -64,4 +64,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    exit()
