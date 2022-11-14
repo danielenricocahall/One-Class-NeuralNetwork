@@ -83,11 +83,11 @@ class OneClassNeuralNetwork:
         def quantile_loss_metric(*args):
             return quantile_loss(self.r, args[1], nu)
 
+        quantile_loss_metric.__name__ = 'quantile_loss'
+
         def on_epoch_end(epoch, logs):
             self.w = model.get_layer('hidden_output').get_weights()[0]
             self.V = model.get_layer('input_hidden').get_weights()[0]
-
-        quantile_loss_metric.__name__ = 'quantile_loss'
 
         model = self.build_model()
 
