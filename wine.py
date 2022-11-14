@@ -23,11 +23,11 @@ def main():
     num_features = X.shape[1]
     num_hidden = 16
     r = 1.0
-    epochs = 100
-    nu = 0.01
+    epochs = 300
+    nu = 0.05
 
     oc_nn = OneClassNeuralNetwork(num_features, num_hidden, r)
-    model, history = oc_nn.train_model(X, epochs=epochs, nu=nu, init_lr=0.01)
+    model, history = oc_nn.train_model(X, epochs=epochs, nu=nu, init_lr=0.0005)
 
     plt.style.use("ggplot")
     plt.figure()

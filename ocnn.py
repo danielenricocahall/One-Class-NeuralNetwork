@@ -33,10 +33,13 @@ class OneClassNeuralNetwork:
         self.g = g
 
     def custom_ocnn_loss(self, nu: float) -> Callable[[tf.Tensor, tf.Tensor], tf.Tensor]:
-        def custom_hinge(_: tf.Tensor, y_pred: tf.Tensor) -> tf.Tensor:
+        def custom_hinge(_: tf.Tensor, y_hat: tf.Tensor) -> tf.Tensor:
             loss = 0.5 * tf.norm(self.w) + \
                    0.5 * tf.norm(self.V) + \
-                   quantile_loss(self.r, y_pred, nu)
+                   quantile_loss(self.r, y_hat, nu)
+            self.r = tfp.stats.percentile(y_hat,
+                                          q=100 * nu,
+                                          interpolation='linear')
             return loss
 
         return custom_hinge
@@ -94,11 +97,6 @@ class OneClassNeuralNetwork:
         def on_epoch_end(epoch, logs):
             self.w = model.get_layer('hidden_output').get_weights()[0]
             self.V = model.get_layer('input_hidden').get_weights()[0]
-            g = self.g
-            y_hat = tf.matmul(g(tf.matmul(X, self.V)), self.w)
-            self.r = tfp.stats.percentile(y_hat,
-                                          q=100 * nu,
-                                          interpolation='linear')
 
         model = self.build_model()
 
