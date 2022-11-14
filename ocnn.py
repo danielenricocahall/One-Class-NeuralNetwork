@@ -1,3 +1,5 @@
+from typing import Callable
+
 import numpy as np
 from tensorflow.keras.models import load_model
 from tensorflow.keras.models import Sequential
@@ -8,29 +10,33 @@ import tensorflow_probability as tfp
 
 from loss import quantile_loss
 
-RANDOM_SEED = 42
-np.random.seed(RANDOM_SEED)
+tf.random.set_seed(0)
 
 
 class OneClassNeuralNetwork:
 
-    def __init__(self, input_dim, hidden_layer_size, r=1.0):
+    def __init__(self,
+                 input_dim: int,
+                 hidden_layer_size: int,
+                 r: float = 1.0,
+                 g: Callable[[tf.Tensor], tf.Tensor] = tf.nn.sigmoid):
         """
 
         :param input_dim: number of input features
         :param hidden_layer_size: number of neurons in the hidden layer
         :param r: bias of hyperplane
+        :param g: activation function
         """
         self.input_dim = input_dim
         self.hidden_size = hidden_layer_size
         self.r = r
+        self.g = g
 
-    def custom_ocnn_loss(self, nu):
-        def custom_hinge(_, y_pred):
+    def custom_ocnn_loss(self, nu: float) -> Callable[[tf.Tensor, tf.Tensor], tf.Tensor]:
+        def custom_hinge(_: tf.Tensor, y_pred: tf.Tensor) -> tf.Tensor:
             loss = 0.5 * tf.norm(self.w) + \
                    0.5 * tf.norm(self.V) + \
                    quantile_loss(self.r, y_pred, nu)
-            self.r = tfp.stats.percentile(y_pred, q=100 * nu, interpolation='linear')
             return loss
 
         return custom_hinge
@@ -40,7 +46,7 @@ class OneClassNeuralNetwork:
         model = Sequential()
         input_hidden = Dense(h_size, input_dim=self.input_dim, kernel_initializer="glorot_normal", name="input_hidden")
         model.add(input_hidden)
-        model.add(Activation("sigmoid"))
+        model.add(Activation(self.g))
 
         # Define Dense layer from hidden to output
         hidden_output = Dense(1, name="hidden_output")
@@ -52,7 +58,7 @@ class OneClassNeuralNetwork:
 
         return model
 
-    def train_model(self, X, epochs=50, nu=1e-2, init_lr=1e-2, save=True):
+    def train_model(self, X: np.array, epochs: int = 50, nu: float = 1e-2, init_lr: float = 1e-2, save: bool = True):
         """
         builds and trains the model on the supplied input data
 
@@ -68,26 +74,31 @@ class OneClassNeuralNetwork:
         def r_metric(*args):
             return self.r
 
-        r_metric.__name__ = 'r'
-
         def w_norm(*args):
             return 0.5 * tf.norm(self.w)
 
         def V_norm(*args):
             return 0.5 * tf.norm(self.V)
 
+        def quantile_loss_metric(*args):
+            return quantile_loss(self.r, args[1], nu)
+
+        r_metric.__name__ = 'r'
+
         w_norm.__name__ = 'w_norm'
 
         V_norm.__name__ = 'V_norm'
-
-        def quantile_loss_metric(*args):
-            return quantile_loss(self.r, args[1], nu)
 
         quantile_loss_metric.__name__ = 'quantile_loss'
 
         def on_epoch_end(epoch, logs):
             self.w = model.get_layer('hidden_output').get_weights()[0]
             self.V = model.get_layer('input_hidden').get_weights()[0]
+            g = self.g
+            y_hat = tf.matmul(g(tf.matmul(X, self.V)), self.w)
+            self.r = tfp.stats.percentile(y_hat,
+                                          q=100 * nu,
+                                          interpolation='linear')
 
         model = self.build_model()
 
@@ -110,14 +121,12 @@ class OneClassNeuralNetwork:
                 os.mkdir('models')
             model_dir = f"models/ocnn_{datetime.now().strftime('%Y-%m-%d-%H:%M:%s')}"
             os.mkdir(model_dir)
-            V = model.layers[0].get_weights()[0]
-            w = model.layers[2].get_weights()[0]
             model.save(f"{model_dir}/model.h5")
-            np.savez(f"{model_dir}/params.npz", w=w, V=V, nu=nu)
+            np.savez(f"{model_dir}/params.npz", w=self.w, V=self.V, nu=nu)
 
         return model, history
 
-    def load_model(self, model_dir):
+    def load_model(self, model_dir: str) -> "OneClassNeuralNetwork":
         """
         loads a pretrained model
         :param model_dir: directory where model and model params (w, V, and nu) are saved

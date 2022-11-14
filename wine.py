@@ -21,18 +21,18 @@ def main():
                              1: "Color intensity"}
 
     num_features = X.shape[1]
-    num_hidden = 16
+    num_hidden = 32
     r = 1.0
-    epochs = 1000
-    nu = 0.1
+    epochs = 100
+    nu = 0.01
 
     oc_nn = OneClassNeuralNetwork(num_features, num_hidden, r)
-    model, history = oc_nn.train_model(X, epochs=epochs, nu=nu, init_lr=0.1)
+    model, history = oc_nn.train_model(X, epochs=epochs, nu=nu, init_lr=0.00001)
 
     plt.style.use("ggplot")
     plt.figure()
     # Note: omit the first train loss as it is very high and skews the plot
-    plt.plot(history.epoch[1:], history.history["loss"][1:], label="train_loss")
+    plt.plot(history.epoch[2:], history.history["loss"][2:], label="train_loss")
     plt.plot(history.epoch, history.history["quantile_loss"], label="quantile_loss")
     plt.plot(history.epoch, history.history["r"], label="r")
     plt.plot(history.epoch, history.history["w_norm"], label="w_norm")
