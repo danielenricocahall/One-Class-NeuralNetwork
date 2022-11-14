@@ -21,13 +21,13 @@ def main():
                              1: "Color intensity"}
 
     num_features = X.shape[1]
-    num_hidden = 16
+    num_hidden = 8
     r = 1.0
     epochs = 300
     nu = 0.05
 
     oc_nn = OneClassNeuralNetwork(num_features, num_hidden, r)
-    model, history = oc_nn.train_model(X, epochs=epochs, nu=nu, init_lr=0.0005)
+    model, history = oc_nn.train_model(X, epochs=epochs, nu=nu, init_lr=0.001)
 
     plt.style.use("ggplot")
     plt.figure()

@@ -1,6 +1,7 @@
 from typing import Callable
 
 import numpy as np
+import tensorflow.python.keras.initializers.initializers_v1
 from tensorflow.keras.models import load_model
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Activation, Dense
@@ -47,12 +48,12 @@ class OneClassNeuralNetwork:
     def build_model(self):
         h_size = self.hidden_size
         model = Sequential()
-        input_hidden = Dense(h_size, input_dim=self.input_dim, kernel_initializer="glorot_normal", name="input_hidden")
+        input_hidden = Dense(h_size, input_dim=self.input_dim, kernel_initializer=tensorflow.python.keras.initializers.initializers_v1.RandomNormal(0.5), name="input_hidden")
         model.add(input_hidden)
         model.add(Activation(self.g))
 
         # Define Dense layer from hidden to output
-        hidden_output = Dense(1, name="hidden_output")
+        hidden_output = Dense(1, name="hidden_output", kernel_initializer=tensorflow.python.keras.initializers.initializers_v1.RandomNormal(0.5))
         model.add(hidden_output)
         model.add(Activation("linear"))
 

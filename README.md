@@ -42,5 +42,5 @@ Execute `pytest test` to run.
 ![alt text](https://github.com/danielenricocahall/One-Class-NeuralNetwork/blob/master/figures/wine_clusters.png)
 
 
-# Limitations
-Unlike in the original paper, which optimizes for `w` and `V` first, then optimizes for `r`, in this implementation, they're jointly optimized, which results in an unbounded loss (as in, it never converges). The model works, but I would like to explore this further to evaluate if we can perform the correct optimization in one step.
+# Notes
+Based on the objective function we use, the loss is unbounded, meaning there is no real "convergence" - at least on the two test datasets presented here. I've probed the source code, read through the paper several times, and I'm fairly certain the implementation here is accurate. I'm not sure if this is a limitation of the approach, or if I'm missing something. I'd love to hear from anyone who has any insight on this, especially if you apply it to new datasets.
