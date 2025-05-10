@@ -5,11 +5,11 @@ The implementation is based on the approach described here: https://arxiv.org/pd
 
 # Setup
 
-`pipenv install .` should configure a python environment and install all necessary dependencies in the environment. 
+`uv sync` should configure a python environment and install all necessary dependencies in the environment. 
 
 # Running
 
-Running `python kdd_cup.py` or `python wine.py` within your new python environment (either through CLI or IDE) should kick off training on the KDD Cup dataset epochs and generate some output plots.
+Running `uv run python kdd_cup.py` or `uv run python wine.py` within your new python environment (either through CLI or IDE) should kick off training on the KDD Cup dataset epochs and generate some output plots.
 
 # Testing
 
@@ -17,7 +17,7 @@ Two unit tests are defined in `test/test_basic.py`: building the model, and the 
 
 ![alt text](https://github.com/danielenricocahall/One-Class-NeuralNetwork/blob/master/figures/test_case.png)
 
-Execute `pytest test` to run.
+Execute `uv run pytest test` to run.
 
 # Results
 
